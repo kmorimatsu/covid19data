@@ -62,32 +62,6 @@ draw_graph_2=function(canvas_name,yAxes,title,data1,data2,viewPercent){
 		d2[i-start]=prefdata['data'][i][data2.type];
 		lbl[i-start]=prefdata['labels'][i].substring(5,prefdata['labels'][i].length);
 	}
-	var datasets;
-	if (data1.type==data2.type) {
-		datasets=[
-			{
-				label: data2.name,
-				data: d2,
-				borderColor: "rgba(255,0,0,1)",
-				backgroundColor: "rgba(0,0,0,0)"
-			},
-			{
-				label:data1.name,
-				data: d1,
-				borderColor: "rgba(0,0,255,1)",
-				backgroundColor: "rgba(0,0,0,0)"
-			}
-		];
-	} else {
-		datasets=[
-			{
-				label:data1.name,
-				data: d1,
-				borderColor: "rgba(0,0,255,1)",
-				backgroundColor: "rgba(0,0,0,0)"
-			}
-		];
-	}
 	var ctx = document.getElementById(canvas_name);
 	var myLineChart = new Chart(ctx, {
 		type: 'line',
