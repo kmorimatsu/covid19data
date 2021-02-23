@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<!--
+/********************************************
+*    Open source code written by Katsumi    *
+*          This script is released          *
+*            under the LGPL v2.1.           *
+*  http://hp.vector.co.jp/authors/VA016157/ *
+*  https://github.com/kmorimatsu            *
+********************************************/
+-->
+<head>
+	<meta charset="UTF-8" />
+	<link rel="stylesheet" type="text/css" href="./style.css" />
+	<script type="text/javascript" src="./chartjs/Chart.js"></script>
+	<script type="text/javascript" src="./data/data.php"></script>
+	<script type="text/javascript" src="./download.js"></script>
+	<script type="text/javascript" src="./get.js"></script>
+	<script type="text/javascript" src="./graphs.js"></script>
+	<script type="text/javascript" src="./init.js"></script>
+	<title>全国及び都道府県別のCOVID-19データー</title>
+</head>
+<body>
+	<h3><script type="text/javascript">
+		document.write(prefdata['pname']);
+	</script>の COVID-19 データー</h3>
+	<canvas id="positiveNums"></canvas>
+	<hr />
+	<canvas id="positiveNumsLog"></canvas>
+	<hr />
+	<canvas id="eRepNums"></canvas>
+	<hr />
+	<canvas id="deathNums"></canvas>
+	<hr />
+	<p>表示する期間を調整：<input type="range" name="range" value=50 onChange="draw_graphs(100-this.value);"></p>
+	<script type="text/javascript" src="./main.js"></script>
+	<input type="button" value="Save CSV file" id="savebutton" onclick="
+				saveCSV(document.getElementById('save'));
+			" />
+	<a class="hidden" id="save" href="#" download="covid19data.csv">Save CSV</a><br />
+	<hr />
+	<script type="text/javascript">
+		for(i=0;i<=47;i++){
+			document.write('<a href="?pref='+i+'">'+data[i]['pname']+'</a> ');
+		}
+	</script>
+	<hr />
+	<p>注意事項</p>
+	<ul>
+		<li>データーは、NHKの「<a href="https://www3.nhk.or.jp/news/special/coronavirus/">特設サイト　新型コロナウィルス</a>」から取得したもの（csv ファイル）を用いています。</li>
+		<li>データーは、一時間おきに最新の情報を取得するようにしています。NHKのサイトのデーターが更新されてから一時間ほど待てば、このページの情報も最新のものになります。</li>
+		<li>それぞれの値の７日間平均値は、その日を含めて過去７日間の値の平均を取ったものです。</li>
+		<li>実行再生産数は、７日間平均の陽性者数のデーターを用いて、５日間で何倍に増えたかを計算しています。</li>
+		<li>実行再生産数速報値は、陽性者数を７日前の値と比較した後に、5/7乗した値を用いています。</li>
+	</ul>
+</body>
+</html>
