@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<!--
+/********************************************
+*    Open source code written by Katsumi    *
+*          This script is released          *
+*            under the LGPL v2.1.           *
+*  http://hp.vector.co.jp/authors/VA016157/ *
+*  https://github.com/kmorimatsu            *
+********************************************/
+-->
+<head>
+	<meta charset="UTF-8" />
+	<link rel="stylesheet" type="text/css" href="./style.css" />
+	<script type="text/javascript" src="./chartjs/Chart.js"></script>
+	<script type="text/javascript" src="./data/data.php"></script>
+	<script type="text/javascript" src="./download.js"></script>
+	<script type="text/javascript" src="./get.js"></script>
+	<script type="text/javascript" src="./graphs.js"></script>
+	<script type="text/javascript" src="./pvsd.js"></script>
+	<script type="text/javascript" src="./init.js"></script>
+	<title>全国及び都道府県別の陽性者数と死者数の比較</title>
+</head>
+<body>
+	<h3><script type="text/javascript">
+		document.write(prefdata['pname']);
+	</script>の COVID-19 データー</h3>
+	<canvas id="pvsd"></canvas>
+	<hr />
+	<p><input id="daybefore" type="text" size="5" onblur="draw_graphs();" />日後の
+		<input id="mulnum" type="text" size="5" onblur="draw_graphs();"/>倍した死者数を表示</p>
+	<p>表示する期間を調整：<input type="range" name="range" value=50 onChange="draw_graphs(100-this.value);" /></p>
+	<script type="text/javascript" src="./main.js"></script>
+	<hr />
+	<script type="text/javascript">
+		for(i=0;i<=47;i++){
+			document.write('<a href="?pref='+i+'">'+data[i]['pname']+'</a> ');
+		}
+	</script>
+</body>
+</html>
