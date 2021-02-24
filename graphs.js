@@ -35,7 +35,7 @@ draw_graphs=function(viewPercent){
 			}
 		},
 	};
-	draw_graph_2('eRepNums',yAxes,prefdata['pname']+'の実行再生産数推移',{type:7,name:'実行再生産数速報値'},{type:6,name:'実行再生産数'},viewPercent);
+	draw_graph_2('eRepNums',yAxes,prefdata['pname']+'の実効再生産数推移',{type:7,name:'実効再生産数速報値'},{type:6,name:'実効再生産数'},viewPercent);
 	yAxes={
 		ticks:{
 			min: 0,
