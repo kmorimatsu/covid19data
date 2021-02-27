@@ -7,7 +7,7 @@
 ********************************************/
 
 // Validate prefdata
-if (0<=get.pref && get.pref<=47) {
+if (0<=get.pref && get.pref<data.length) {
 	var prefdata=data[parseInt(get.pref)];
 } else {
 	var prefdata=data[0];
