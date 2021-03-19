@@ -25,13 +25,13 @@ function makeJS(){
 	// Prepare arrays
 	$plist=array();
 	$data=array();
-	// Read csv files from NHK site
-	$csv=file_get_contents('https://data.ca.gov/dataset/590188d5-8545-4c93-a9a0-e230f0db7290/resource/926fd08f-cc91-4828-af38-bd45de97f8c3/download/statewide_cases.csv');
-//	$csv=file_get_contents('./statewide_cases.csv');
+	// Read csv file from https://data.chhs.ca.gov/dataset/covid-19-time-series-metrics-by-county-and-state
+	$csv=file_get_contents('https://data.chhs.ca.gov/dataset/f333528b-4d38-4814-bebb-12db1f10f535/resource/046cdd2b-31e5-4d34-9ed3-b48cdbc4be7a/download/covid19cases_test.csv');
+	// Rearrange CSV
+	$csv=convertCSV($csv);
 	// Check the csv file and prepare result array as $m
-	preg_match_all('/([^,\r\n]+),([0-9\.]+),([0-9\.]+),([0-9\.]+),([0-9\.]+),(202[^,\r\n]+)/',$csv,$m);
-	$csv=totalCSV($m).$csv;
-	preg_match_all('/([^,\r\n]+),([0-9\.]+),([0-9\.]+),([0-9\.]+),([0-9\.]+),(202[^,\r\n]+)/',$csv,$m);
+	//                 date        , area , area_type,  population, cases    , c_cases  , deaths   , c_deaths
+	preg_match_all('/(202[^,\r\n]+),([^,\r\n]+),[^,\r\n]+,[0-9\.]+,([0-9\.]+),([0-9\.]+),([0-9\.]+),([0-9\.]+),.*/',$csv,$m);
 	$num=count($m[0]);
 	
 	$pnum=-1;
@@ -40,9 +40,9 @@ function makeJS(){
 		// Fetch information
 		// Note that sanitizing of dara is done here.
 		// I believe NHK web constructer, but the site may be cracked.
-		$dat=htmlentities(str_replace('/0','/',str_replace('-','/',$m[6][$i])),ENT_QUOTES,'UTF-8');
-		$pname=htmlentities($m[1][$i],ENT_QUOTES,'UTF-8');
-		$nums=array($m[4][$i],$m[2][$i],$m[5][$i],$m[3][$i]); // This contains numbers only. See regular expression.
+		$dat=htmlentities(str_replace('/0','/',str_replace('-','/',$m[1][$i])),ENT_QUOTES,'UTF-8');
+		$pname=htmlentities($m[2][$i],ENT_QUOTES,'UTF-8');
+		$nums=array($m[3][$i],$m[4][$i],$m[5][$i],$m[6][$i]); // This contains numbers only. See regular expression.
 		
 		if ($cname!=$pname) {
 			// Begin new prefecture
@@ -96,21 +96,27 @@ function makeJS(){
 	return $js;
 }
 
-function totalCSV($m){
-	$data=array();
-	$num=count($m[0]);
-	for($i=0;$i<$num;$i++){
-		if (empty($data[$m[6][$i]])) {
-			$data[$m[6][$i]]=array('California',0,0,0,0,$m[6][$i]);
+function convertCSV($csv){
+	// Create counties array
+	$counties=array();
+	$counties['California']=array();
+	preg_match_all('/2021-03-18,([^,]+),County/',$csv,$m);
+	for($i=0;$i<count($m[1]);$i++){
+		$counties[$m[1][$i]]=array();
+	}
+	//print_r($counties);exit;
+	// Read CSV from bottom
+	preg_match_all('/202[\-0-9]+,([^,]+),[^\r\n]*[\r\n]+/',$csv,$m);
+	for($i=count($m[0])-1;0<=$i;$i--){
+		$counties[$m[1][$i]][]=$m[0][$i];
+	}
+	//print_r($counties);exit;
+	// Construct CSV
+	$csv2='';
+	foreach($counties as $array){
+		for($i=0;$i<count($array);$i++){
+			$csv2.=$array[$i];
 		}
-		$data[$m[6][$i]][1]+=$m[2][$i];
-		$data[$m[6][$i]][2]+=$m[3][$i];
-		$data[$m[6][$i]][3]+=$m[4][$i];
-		$data[$m[6][$i]][4]+=$m[5][$i];
 	}
-	$csv='';
-	foreach($data as $d=>$a){
-		$csv.=implode(',',$a)."\n";
-	}
-	return $csv;
+	return $csv2;
 }
