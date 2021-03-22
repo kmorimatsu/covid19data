@@ -22,7 +22,8 @@ draw_graphs=function(viewPercent){
 			'death':data[i]['data'][lastnum][3],
 			'deathpp':(100000*data[i]['data'][lastnum][3]/prefp[data[i]['pname']]).toFixed(2),
 			'deathppm':(100000*(data[i]['data'][lastnum][3]-data[i]['data'][lastnum-28][3])/prefp[data[i]['pname']]).toFixed(2),
-			'mortality':(100*data[i]['data'][lastnum][3]/data[i]['data'][lastnum][1]).toFixed(2)
+			'mortality':(100*data[i]['data'][lastnum][3]/data[i]['data'][lastnum][1]).toFixed(2),
+			'mortalitym':(100*(data[i]['data'][lastnum][3]-data[i]['data'][lastnum-28][3])/(data[i]['data'][lastnum-24][1]-data[i]['data'][lastnum-24-28][1])).toFixed(2)
 		});
 	}
 	// Sort array for positives
@@ -88,6 +89,15 @@ draw_graphs=function(viewPercent){
 		data2.push(gdata[i]['mortality']);
 	}
 	draw_bargraph('bargraph7',labels,date+'までの死亡率','陽性者100人当たりの死者数',data2);
+	// Sort array for mortality in last month
+	gdata.sort(function(a,b){ return b.mortalitym-a.mortalitym; });
+	labels=new Array();
+	data2=new Array();
+	for(i=0;i<gdata.length;i++){
+		labels.push(gdata[i]['pref']);
+		data2.push(gdata[i]['mortalitym']);
+	}
+	draw_bargraph('bargraph7.5',labels,date+'までの直近28日間の死亡率','陽性者100人当たりの死者数',data2);
 };
 
 draw_bargraph=function(id,labels,title,name,data,log){
