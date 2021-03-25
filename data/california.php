@@ -25,13 +25,17 @@ function makeJS(){
 	// Prepare arrays
 	$plist=array();
 	$data=array();
-	// Read csv file from https://data.chhs.ca.gov/dataset/covid-19-time-series-metrics-by-county-and-state
-	$csv=file_get_contents('https://data.chhs.ca.gov/dataset/f333528b-4d38-4814-bebb-12db1f10f535/resource/046cdd2b-31e5-4d34-9ed3-b48cdbc4be7a/download/covid19cases_test.csv');
+	// Read csv file from https://github.com/nytimes/covid-19-data
+	//$csv=loadCSV('./us-counties.csv');
+	$csv=loadCSV('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv');
+	//$csv2=loadCSV('./us-states.csv');
+	$csv2=loadCSV('https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-states.csv');
 	// Rearrange CSV
-	$csv=convertCSV($csv);
+	$csv=convertCSV($csv2,'(California),').convertCSV($csv,'([^,]+),California,');
+	//file_put_contents('./result.csv',$csv);exit;
 	// Check the csv file and prepare result array as $m
-	//                 date        , area , area_type,  population, cases    , c_cases  , deaths   , c_deaths
-	preg_match_all('/(202[^,\r\n]+),([^,\r\n]+),[^,\r\n]+,[0-9\.]+,([0-9\.]+),([0-9\.]+),([0-9\.]+),([0-9\.]+),.*/',$csv,$m);
+	//                 date        , area ,       cases    , c_cases  , deaths   , c_deaths
+	preg_match_all('/(202[^,\r\n]+),([^,\r\n]+),([0-9\.]+),([0-9\.]+),([0-9\.]+),([0-9\.]+).*/',$csv,$m);
 	$num=count($m[0]);
 	
 	$pnum=-1;
@@ -77,7 +81,7 @@ function makeJS(){
 
 	// Construct JavaScript
 	$js="/*\n";
-	$js.="  The data was fetched from https://data.ca.gov/dataset/covid-19-cases\n";
+	$js.="  The data was fetched from https://github.com/nytimes/covid-19-data\n";
 	$js.="  , modified and converted to Javascript code.\n";
 	$js.="*/\n";
 	$js.="var data=new Array();\n";
@@ -96,27 +100,51 @@ function makeJS(){
 	return $js;
 }
 
-function convertCSV($csv){
+function loadCSV($url){
+	$csv='';
+	$handle=fopen($url,'r');
+	while($line=fgets($handle)){
+		if (preg_match('/California/',$line)) $csv.=$line;
+	}
+	fclose($handle);
+	return $csv;
+}
+
+function convertCSV($csv,$regex){
+	/*
+		Format of CSV (conties):
+			date,county,state,fips,cases,deaths
+			2020-01-21,Snohomish,Washington,53061,1,0
+			$regex='([^,]+),California,';
+		Format of CSV (states):
+			date,state,fips,cases,deaths
+			2020-01-21,Washington,53,1,0
+			$regex='([A-Z][a-z]+),';
+			$regex='(California),';
+	*/
 	// Create counties array
 	$counties=array();
-	$counties['California']=array();
-	preg_match_all('/2021-03-18,([^,]+),County/',$csv,$m);
+	preg_match_all('/'.$regex.'/',$csv,$m);
 	for($i=0;$i<count($m[1]);$i++){
 		$counties[$m[1][$i]]=array();
 	}
 	//print_r($counties);exit;
-	// Read CSV from bottom
-	preg_match_all('/202[\-0-9]+,([^,]+),[^\r\n]*[\r\n]+/',$csv,$m);
-	for($i=count($m[0])-1;0<=$i;$i--){
-		$counties[$m[1][$i]][]=$m[0][$i];
+	// Read CSV
+	preg_match_all('/(202[\-0-9]+),'.$regex.'[^,]+,([0-9\.]*),([0-9\.]*)/',$csv,$m);
+	for($i=0;$i<count($m[0]);$i++){
+		$counties[$m[2][$i]][]=array($m[0][$i],$m[1][$i],$m[2][$i],$m[3][$i],$m[4][$i]);
 	}
-	//print_r($counties);exit;
+	//print_r($counties['California']);exit;
 	// Construct CSV
 	$csv2='';
 	foreach($counties as $array){
+		$prevp=$prevd=0;
 		for($i=0;$i<count($array);$i++){
-			$csv2.=$array[$i];
+			$csv2.=$array[$i][1].','.$array[$i][2].','.($array[$i][3]-$prevp).','.$array[$i][3].','.($array[$i][4]-$prevd).','.$array[$i][4]."\n";
+			$prevp=$array[$i][3];
+			$prevd=$array[$i][4];
 		}
 	}
+	//file_put_contents('./result.csv',$csv2);exit;
 	return $csv2;
 }
