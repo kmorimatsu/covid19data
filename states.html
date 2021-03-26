@@ -13,18 +13,18 @@
 	<meta charset="UTF-8" />
 	<link rel="stylesheet" type="text/css" href="./style.css" />
 	<script type="text/javascript" src="./chartjs/Chart.js"></script>
-	<script type="text/javascript" src="./data/data.php"></script>
+	<script type="text/javascript" src="./data/states.php"></script>
 	<script type="text/javascript" src="./download.js"></script>
 	<script type="text/javascript" src="./get.js"></script>
 	<script type="text/javascript" src="./graphs.js"></script>
 	<script type="text/javascript" src="./init.js"></script>
-	<title>全国及び都道府県別のCOVID-19データー</title>
+	<title>全米及び州別のCOVID-19データー</title>
 </head>
 <body>
 	<script type="text/javascript" src="./menu.js"></script>
 	<h3><script type="text/javascript">
 		document.write(prefdata['pname']);
-	</script>の COVID-19 データー</h3>
+	</script> の COVID-19 データー</h3>
 	<canvas id="positiveNums"></canvas>
 	<hr />
 	<canvas id="positiveNumsLog"></canvas>
@@ -41,15 +41,17 @@
 	<a class="hidden" id="save" href="#" download="covid19data.csv">Save CSV</a><br />
 	<hr />
 	<script type="text/javascript">
-		for(i=0;i<=47;i++){
+		for(i=0;i<data.length;i++){
+			if (!data[i]['pname']) continue;
+			if (0<i) document.write('/ ');
 			document.write('<a href="?pref='+i+'">'+data[i]['pname']+'</a> ');
 		}
 	</script>
 	<hr />
 	<p>注意事項</p>
 	<ul>
-		<li>データーは、NHKの「<a href="https://www3.nhk.or.jp/news/special/coronavirus/">特設サイト　新型コロナウィルス</a>」から取得したもの（csv ファイル）を用いています。</li>
-		<li>データーは、一時間おきに最新の情報を取得するようにしています。NHKのサイトのデーターが更新されてから一時間ほど待ってページを再読み込みすれば、このページの情報も最新のものになります。</li>
+		<li>データーは、New York Timesの「<a href="https://github.com/nytimes/covid-19-data">Github レポジトリー</a>」から取得したもの（csv ファイル）を用いています。</li>
+		<li>データーは、一時間おきに最新の情報を取得するようにしています。Githubのデーターが更新されてから一時間ほど待ってページを再読み込みすれば、このページの情報も最新のものになります。</li>
 		<li>それぞれの値の７日間平均値は、その日を含めて過去７日間の値の平均を取ったものです。</li>
 		<li>実効再生産数は、７日間平均の陽性者数のデーターを用いて、５日間で何倍に増えたかを計算しています。</li>
 		<li>実効再生産数速報値は、陽性者数を７日前の値と比較した後に、5/7乗した値を用いています。</li>
