@@ -17,13 +17,13 @@ draw_graphs=function(viewPercent){
 		gdata.push({
 			'pref':data[i]['pname'],
 			'positives':data[i]['data'][lastnum][1],
-			'positivespp':(100000*data[i]['data'][lastnum][1]/prefp[data[i]['pname']]).toFixed(2),
-			'positivesppw':(100000*(data[i]['data'][lastnum][1]-data[i]['data'][lastnum-7][1])/prefp[data[i]['pname']]).toFixed(2),
+			'positivespp':parseFloat(0+(100000*data[i]['data'][lastnum][1]/prefp[data[i]['pname']]).toFixed(2)),
+			'positivesppw':parseFloat(0+(100000*(data[i]['data'][lastnum][1]-data[i]['data'][lastnum-7][1])/prefp[data[i]['pname']]).toFixed(2)),
 			'death':data[i]['data'][lastnum][3],
-			'deathpp':(100000*data[i]['data'][lastnum][3]/prefp[data[i]['pname']]).toFixed(2),
-			'deathppm':(100000*(data[i]['data'][lastnum][3]-data[i]['data'][lastnum-28][3])/prefp[data[i]['pname']]).toFixed(2),
-			'mortality':(100*data[i]['data'][lastnum][3]/data[i]['data'][lastnum][1]).toFixed(2),
-			'mortalitym':(100*(data[i]['data'][lastnum][3]-data[i]['data'][lastnum-28][3])/(data[i]['data'][lastnum-24][1]-data[i]['data'][lastnum-24-28][1])).toFixed(2)
+			'deathpp':parseFloat(0+(100000*data[i]['data'][lastnum][3]/prefp[data[i]['pname']]).toFixed(2)),
+			'deathppm':parseFloat(0+(100000*(data[i]['data'][lastnum][3]-data[i]['data'][lastnum-28][3])/prefp[data[i]['pname']]).toFixed(2)),
+			'mortality':parseFloat(0+(100*data[i]['data'][lastnum][3]/data[i]['data'][lastnum][1]).toFixed(2)),
+			'mortalitym':parseFloat(0+(100*(data[i]['data'][lastnum][3]-data[i]['data'][lastnum-28][3])/(data[i]['data'][lastnum-24][1]-data[i]['data'][lastnum-24-28][1])).toFixed(2))
 		});
 	}
 	// Sort array for positives
