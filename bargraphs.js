@@ -19,6 +19,8 @@ draw_graphs=function(viewPercent){
 			'positives':data[i]['data'][lastnum][1],
 			'positivespp':parseFloat(0+(100000*data[i]['data'][lastnum][1]/prefp[data[i]['pname']]).toFixed(2)),
 			'positivesppw':parseFloat(0+(100000*(data[i]['data'][lastnum][1]-data[i]['data'][lastnum-7][1])/prefp[data[i]['pname']]).toFixed(2)),
+			'ern':parseFloat(0+data[i]['data'][lastnum][6]),
+			'ern30':parseFloat(0+(data[i]['data'][lastnum][4]>=30 ? data[i]['data'][lastnum][6]:0)),
 			'death':data[i]['data'][lastnum][3],
 			'deathpp':parseFloat(0+(100000*data[i]['data'][lastnum][3]/prefp[data[i]['pname']]).toFixed(2)),
 			'deathppm':parseFloat(0+(100000*(data[i]['data'][lastnum][3]-data[i]['data'][lastnum-28][3])/prefp[data[i]['pname']]).toFixed(2)),
@@ -52,6 +54,15 @@ draw_graphs=function(viewPercent){
 		data2.push(gdata[i]['positivesppw']);
 	}
 	draw_bargraph('bargraph3.5',labels,date+'までの直近7日間の感染者数','10万人当たりの感染者数',data2);
+	// Sort array for execution reproduction number (more than 30 positives)
+	gdata.sort(function(a,b){ return b.ern30-a.ern30+(b.ern/1000-a.ern/1000); });
+	labels=new Array();
+	data2=new Array();
+	for(i=0;i<gdata.length;i++){
+		labels.push(gdata[i]['pref']);
+		data2.push(gdata[i]['ern30']);
+	}
+	draw_bargraph('bargraph3.7',labels,date+'の実行再生産数比較（陽性者30人以上の都道府県）','実行再生産数',data2,0,'');
 	// Sort array for death
 	gdata.sort(function(a,b){ return b.death-a.death; });
 	labels=new Array();
@@ -88,7 +99,7 @@ draw_graphs=function(viewPercent){
 		labels.push(gdata[i]['pref']);
 		data2.push(gdata[i]['mortality']);
 	}
-	draw_bargraph('bargraph7',labels,date+'までの死亡率','陽性者100人当たりの死者数',data2);
+	draw_bargraph('bargraph7',labels,date+'までの死亡率','陽性者死亡数',data2,0,'%');
 	// Sort array for mortality in last month
 	gdata.sort(function(a,b){ return b.mortalitym-a.mortalitym; });
 	labels=new Array();
@@ -100,7 +111,7 @@ draw_graphs=function(viewPercent){
 	draw_bargraph('bargraph7.5',labels,date+'までの直近28日間の死亡率','陽性者100人当たりの死者数',data2);
 };
 
-draw_bargraph=function(id,labels,title,name,data,log){
+draw_bargraph=function(id,labels,title,name,data,log,postfix){
 	var ctx = document.getElementById(id);
 	var myBarChart = new Chart(ctx, {
 		type: 'bar',
@@ -125,7 +136,7 @@ draw_bargraph=function(id,labels,title,name,data,log){
 					ticks: {
 						Min: 0,
 						callback: function(value, index, values){
-							return value + '人';
+							return value + (postfix === undefined ? '人':postfix);
 						}
 					}
 				}],
