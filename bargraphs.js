@@ -63,6 +63,15 @@ draw_graphs=function(viewPercent){
 		data2.push(gdata[i]['ern30']);
 	}
 	draw_bargraph('bargraph3.7',labels,date+'の実行再生産数比較（陽性者30人以上の都道府県）','実行再生産数',data2,0,'');
+	// Sort array for positives in last week per population
+	gdata.sort(function(a,b){ return b.positivesppw-a.positivesppw; });
+	labels=new Array();
+	data2=new Array();
+	for(i=0;i<gdata.length;i++){
+		labels.push(gdata[i]['pref']);
+		data2.push(gdata[i]['ern']);
+	}
+	draw_bargraph('bargraph3.75',labels,date+'の実行再生産数比較','実行再生産数（人口当たりの陽性者数順）',data2,0,'');
 	// Sort array for death
 	gdata.sort(function(a,b){ return b.death-a.death; });
 	labels=new Array();
