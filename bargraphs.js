@@ -62,7 +62,7 @@ draw_graphs=function(viewPercent){
 		labels.push(gdata[i]['pref']);
 		data2.push(gdata[i]['ern30']);
 	}
-	draw_bargraph('bargraph3.7',labels,date+'の実行再生産数比較（陽性者30人以上の都道府県）','実行再生産数',data2,0,'');
+	draw_bargraph('bargraph3.7',labels,date+'の実行再生産数比較（陽性者30人以上の都道府県）','実行再生産数',data2,0,'',5);
 	// Sort array for positives in last week per population
 	gdata.sort(function(a,b){ return b.positivesppw-a.positivesppw; });
 	labels=new Array();
@@ -71,7 +71,7 @@ draw_graphs=function(viewPercent){
 		labels.push(gdata[i]['pref']);
 		data2.push(gdata[i]['ern']);
 	}
-	draw_bargraph('bargraph3.75',labels,date+'の実行再生産数比較','実行再生産数（人口当たりの陽性者数順）',data2,0,'');
+	draw_bargraph('bargraph3.75',labels,date+'の実行再生産数比較','実行再生産数（人口当たりの陽性者数順）',data2,0,'',5);
 	// Sort array for death
 	gdata.sort(function(a,b){ return b.death-a.death; });
 	labels=new Array();
@@ -120,9 +120,9 @@ draw_graphs=function(viewPercent){
 	draw_bargraph('bargraph7.5',labels,date+'までの直近28日間の死亡率','陽性者100人当たりの死者数',data2);
 };
 
-draw_bargraph=function(id,labels,title,name,data,log,postfix){
+draw_bargraph=function(id,labels,title,name,data,log,postfix,ymax){
 	var ctx = document.getElementById(id);
-	var myBarChart = new Chart(ctx, {
+	var setting={
 		type: 'bar',
 		data: {
 			labels: labels,
@@ -143,7 +143,7 @@ draw_bargraph=function(id,labels,title,name,data,log,postfix){
 				yAxes: [{
 					type: (log ? 'logarithmic':'linear'),
 					ticks: {
-						Min: 0,
+						min: 0,
 						callback: function(value, index, values){
 							return value + (postfix === undefined ? '人':postfix);
 						}
@@ -161,5 +161,7 @@ draw_bargraph=function(id,labels,title,name,data,log,postfix){
 		        backgroundColor: 'rgba(230, 238, 255, 0.6)'
 		    },
 		}
-	});
+	};
+	if (ymax !== undefined)setting.options.scales.yAxes[0].ticks.max=ymax;
+	var myBarChart = new Chart(ctx, setting);
 };
