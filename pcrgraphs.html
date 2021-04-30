@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<!--
+/********************************************
+*    Open source code written by Katsumi    *
+*          This script is released          *
+*            under the LGPL v2.1.           *
+*  http://hp.vector.co.jp/authors/VA016157/ *
+*  https://github.com/kmorimatsu            *
+********************************************/
+-->
+<head>
+	<meta charset="UTF-8" />
+	<link rel="stylesheet" type="text/css" href="./style.css" />
+	<script type="text/javascript" src="./chartjs/Chart.js"></script>
+	<script type="text/javascript" src="./data/pcrdata.php"></script>
+	<script type="text/javascript" src="./download.js"></script>
+	<script type="text/javascript" src="./get.js"></script>
+	<script type="text/javascript" src="./pcrgraphs.js"></script>
+	<script type="text/javascript" src="./init.js"></script>
+	<title>全国及び都道府県別のPCR検査数データー</title>
+</head>
+<body>
+	<script type="text/javascript" src="./menu.js"></script>
+	<h3><script type="text/javascript">
+		document.write(prefdata['pname']);
+	</script>の PCR 検査数データー</h3>
+	<canvas id="graph1"></canvas>
+	<hr />
+	<canvas id="graph2"></canvas>
+	<hr />
+	<canvas id="graph3"></canvas>
+	<hr />
+	<p>表示する期間を調整：<input type="range" name="range" value=50 onChange="draw_graphs(100-this.value);"></p>
+	<script type="text/javascript" src="./main.js"></script>
+	<input type="button" value="Save CSV file" id="savebutton" onclick="
+				saveCSVpcr(document.getElementById('save'));
+			" />
+	<a class="hidden" id="save" href="#" download="covid19data.csv">Save CSV</a><br />
+	<hr />
+	<script type="text/javascript">
+		for(i=0;i<=47;i++){
+			document.write('<a href="?pref='+i+'">'+pcrdata[i]['pname']+'</a> ');
+		}
+	</script>
+	<hr />
+	<p>注意事項</p>
+	<ul>
+		<li>データーは、NECソリューションイノベータの「<a href="https://covid-19.nec-solutioninnovators.com/">COVID-19 対策ダッシュボード</a>」から取得したもの（csv ファイル）を用いています。</li>
+		<li>データーは、一時間おきに最新の情報を取得するようにしています。NECのサイトのデーターが更新されてから一時間ほど待ってページを再読み込みすれば、このページの情報も最新のものになります。</li>
+		<li>それぞれの値の７日間平均値は、その日を含めて過去７日間の値の平均を取ったものです。</li>
+		<li>各自治体のPCR検査数の報告は、毎日ではなく数日に一度の所もあるので、グラフが予想外に振れることがあります。</li>
+	</ul>
+</body>
+</html>

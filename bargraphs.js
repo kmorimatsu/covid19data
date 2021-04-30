@@ -108,7 +108,7 @@ draw_graphs=function(viewPercent){
 		labels.push(gdata[i]['pref']);
 		data2.push(gdata[i]['mortality']);
 	}
-	draw_bargraph('bargraph7',labels,date+'までの死亡率','陽性者死亡数',data2,0,'%');
+	draw_bargraph('bargraph7',labels,date+'までの死亡率','陽性者死亡率',data2,0,'%');
 	// Sort array for mortality in last month
 	gdata.sort(function(a,b){ return b.mortalitym-a.mortalitym; });
 	labels=new Array();
@@ -117,7 +117,7 @@ draw_graphs=function(viewPercent){
 		labels.push(gdata[i]['pref']);
 		data2.push(gdata[i]['mortalitym']);
 	}
-	draw_bargraph('bargraph7.5',labels,date+'までの直近28日間の死亡率','陽性者100人当たりの死者数',data2);
+	draw_bargraph('bargraph7.5',labels,date+'までの直近28日間の死亡率','陽性者死亡率',data2,0,'%');
 };
 
 draw_bargraph=function(id,labels,title,name,data,log,postfix,ymax){
