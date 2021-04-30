@@ -70,6 +70,13 @@ function makeJS(){
 	// Example: 2021/4/21,2021/4/20,470007,47,沖縄県,okinawa,47_okinawa,11652,181529,1251,10,10277,130,6
 	$csv=file_get_contents('https://covid-19.nec-solutioninnovators.com/download/japan_covid19.csv');
 	//$csv=file_get_contents('./japan_covid19.csv');
+	$csv=preg_replace_callback( // "xx,xxx" -> xxxxx replacement
+		'/"([0-9,]+)"/',
+		function ($m) {
+			return str_replace(',','',$m[1]);
+		},
+		$csv
+	);
 	// Check the csv file and prepare result array as $m
 	preg_match_all('/(202[^,\r\n]+),[^,]*,[^,]*,([^,]*),([^,]*),[^,]*,[^,]*,([^,]*),([^,]*),[^,]*,[^,]*,[^,]*,([^,]*),/',$csv,$m);
 	// $1: date, $2: #pref, $3: pref name, $4: #positives, $5: #PCR, $6: #death,

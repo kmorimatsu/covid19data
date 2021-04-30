@@ -11,7 +11,9 @@ draw_graphs=function(viewPercent){
 	var labels=new Array();
 	var data2=new Array();
 	var lastnum=data[1]['labels'].length-1;
+	var pcrlastnum=pcrdata[1]['labels'].length-1;
 	var date=data[1]['labels'][lastnum];
+	var pcrdate=pcrdata[1]['labels'][pcrlastnum];
 	var gdata=new Array();
 	for(i=1;i<data.length;i++){
 		gdata.push({
@@ -25,7 +27,8 @@ draw_graphs=function(viewPercent){
 			'deathpp':parseFloat(0+(100000*data[i]['data'][lastnum][3]/prefp[data[i]['pname']]).toFixed(2)),
 			'deathppm':parseFloat(0+(100000*(data[i]['data'][lastnum][3]-data[i]['data'][lastnum-28][3])/prefp[data[i]['pname']]).toFixed(2)),
 			'mortality':parseFloat(0+(100*data[i]['data'][lastnum][3]/data[i]['data'][lastnum][1]).toFixed(2)),
-			'mortalitym':parseFloat(0+(100*(data[i]['data'][lastnum][3]-data[i]['data'][lastnum-28][3])/(data[i]['data'][lastnum-24][1]-data[i]['data'][lastnum-24-28][1])).toFixed(2))
+			'mortalitym':parseFloat(0+(100*(data[i]['data'][lastnum][3]-data[i]['data'][lastnum-28][3])/(data[i]['data'][lastnum-24][1]-data[i]['data'][lastnum-24-28][1])).toFixed(2)),
+			'pcrpercent':parseFloat(0+(pcrdata[i]['data'][pcrlastnum][6]))
 		});
 	}
 	// Sort array for positives
@@ -72,6 +75,13 @@ draw_graphs=function(viewPercent){
 		data2.push(gdata[i]['ern']);
 	}
 	draw_bargraph('bargraph3.75',labels,date+'の実効再生産数比較','実効再生産数（人口当たりの陽性者数順）',data2,0,'',5);
+	labels=new Array();
+	data2=new Array();
+	for(i=0;i<gdata.length;i++){
+		labels.push(gdata[i]['pref']);
+		data2.push(gdata[i]['pcrpercent']);
+	}
+	draw_bargraph('bargraph3.9',labels,pcrdate+'までの直近7日間のPCR検査陽性率','陽性率（人口当たりの陽性者数順）',data2,0,'%',25);
 	// Sort array for death
 	gdata.sort(function(a,b){ return b.death-a.death; });
 	labels=new Array();
@@ -162,6 +172,6 @@ draw_bargraph=function(id,labels,title,name,data,log,postfix,ymax){
 		    },
 		}
 	};
-	if (ymax !== undefined)setting.options.scales.yAxes[0].ticks.max=ymax;
+	if (ymax !== undefined) setting.options.scales.yAxes[0].ticks.max=ymax;
 	var myBarChart = new Chart(ctx, setting);
 };

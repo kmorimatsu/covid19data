@@ -25,10 +25,10 @@ draw_graphs=function(viewPercent){
 			}
 		}
 	};
-	draw_graph_2('graph3',yAxes,prefdata['pname']+'の陽性率推移',{type:6,name:'陽性率７日平均'},viewPercent);
+	draw_graph_2('graph3',yAxes,prefdata['pname']+'の陽性率推移',{type:6,name:'陽性率７日平均'},viewPercent,25);
 };
 
-draw_graph_2=function(canvas_name,yAxes,title,data1,viewPercent){
+draw_graph_2=function(canvas_name,yAxes,title,data1,viewPercent,ymax){
 	var d1=new Array();
 	var lbl=new Array();
 	var start=0;
@@ -42,7 +42,7 @@ draw_graph_2=function(canvas_name,yAxes,title,data1,viewPercent){
 		lbl[i-start]=prefdata['labels'][i].substring(5,prefdata['labels'][i].length);
 	}
 	var ctx = document.getElementById(canvas_name);
-	var myLineChart = new Chart(ctx, {
+	var setting= {
 		type: 'line',
 		data: {
 			labels: lbl,
@@ -67,5 +67,7 @@ draw_graph_2=function(canvas_name,yAxes,title,data1,viewPercent){
 		        backgroundColor: 'rgba(230, 238, 255, 0.6)'
 		    },
 		}
-	});
+	};
+	if (ymax !== undefined) setting.options.scales.yAxes[0].ticks.max=ymax;
+	var myLineChart = new Chart(ctx, setting);
 };
