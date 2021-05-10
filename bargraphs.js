@@ -53,7 +53,14 @@ draw_graphs=function(viewPercent){
 	labels=new Array();
 	data2=new Array();
 	for(i=0;i<gdata.length;i++){
-		labels.push(gdata[i]['pref']);
+		var updown='';
+		if (gdata[i]['ern']<0.75) updown='↓↓↓';
+		else if (gdata[i]['ern']<0.85) updown='↓↓';
+		else if (gdata[i]['ern']<0.95) updown='↓';
+		else if (gdata[i]['ern']>1.25) updown='↑↑↑';
+		else if (gdata[i]['ern']>1.15) updown='↑↑';
+		else if (gdata[i]['ern']>1.05) updown='↑';
+		labels.push(updown+' '+gdata[i]['pref']);
 		data2.push(gdata[i]['positivesppw']);
 	}
 	draw_bargraph('bargraph3.5',labels,date+'までの直近7日間の感染者数','10万人当たりの感染者数',data2);
