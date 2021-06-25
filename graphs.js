@@ -83,6 +83,7 @@ draw_graph_2=function(canvas_name,yAxes,title,data1,data2,viewPercent){
 			],
 		},
 		options: {
+			aspectRatio: aspectRatio,
 			title: {
 				display: true,
 				text: title

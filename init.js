@@ -28,6 +28,14 @@ if (0<=get.pref && get.pref<data.length) {
 	var prefpcrdata=pcrdata[0];
 }
 
+// Set aspect ratio
+if (get.ar) {
+	var aspectRatio=get.ar;
+	if (aspectRatio<0.1 || 10<aspectRatio) aspectRatio=2;
+} else {
+	var aspectRatio=2;
+}
+
 // Set canvas background color
 Chart.pluginService.register({
     beforeDraw: function(c){

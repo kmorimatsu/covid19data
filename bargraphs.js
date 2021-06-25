@@ -152,6 +152,7 @@ draw_bargraph=function(id,labels,title,name,data,log,postfix,ymax){
 			]
 		},
 		options: {
+			aspectRatio: aspectRatio,
 			title: {
 				display: true,
 				text: title
