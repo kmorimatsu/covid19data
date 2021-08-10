@@ -30,10 +30,15 @@ if (0<=get.pref && get.pref<data.length) {
 
 // Set aspect ratio
 if (get.ar) {
-	var aspectRatio=get.ar;
+	var aspectRatio=parseFloat(get.ar);
 	if (aspectRatio<0.1 || 10<aspectRatio) aspectRatio=1.8;
 } else {
 	var aspectRatio=1.8;
+}
+
+// Set max
+if (get.max) {
+	var graphMax=parseFloat(get.max);
 }
 
 // Set canvas background color
