@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja">
+<!--
+/********************************************
+*    Open source code written by Katsumi    *
+*          This script is released          *
+*            under the LGPL v2.1.           *
+*  http://hp.vector.co.jp/authors/VA016157/ *
+*  https://github.com/kmorimatsu            *
+********************************************/
+-->
+<head>
+	<meta charset="UTF-8" />
+	<link rel="stylesheet" type="text/css" href="./style.css" />
+	<script type="text/javascript" src="./chartjs/Chart.js"></script>
+	<script type="text/javascript" src="./data/california.php"></script>
+	<script type="text/javascript" src="./download.js"></script>
+	<script type="text/javascript" src="./get.js"></script>
+	<script type="text/javascript" src="./graphs.js"></script>
+	<script type="text/javascript" src="./countyp.js"></script>
+	<script type="text/javascript" src="./usbargraphs.js"></script>
+	<script type="text/javascript" src="./init.js"></script>
+	<title>州別の数値比較</title>
+</head>
+<body>
+	<script type="text/javascript" src="./menu.js"></script>
+	<h3><script type="text/javascript">
+		document.write(prefdata['pname']);
+	</script>の COVID-19 データー</h3>
+	<canvas id="bargraph1"></canvas>
+	<hr />
+	<canvas id="bargraph2"></canvas>
+	<hr />
+	<canvas id="bargraph3"></canvas>
+	<hr />
+	<canvas id="bargraph3.5"></canvas>
+	<hr />
+	<canvas id="bargraph3.7"></canvas>
+	<hr />
+	<canvas id="bargraph3.75"></canvas>
+	<hr />
+	<canvas id="bargraph4"></canvas>
+	<hr />
+	<canvas id="bargraph5"></canvas>
+	<hr />
+	<canvas id="bargraph6"></canvas>
+	<hr />
+	<canvas id="bargraph6.5"></canvas>
+	<hr />
+	<canvas id="bargraph7"></canvas>
+	<hr />
+	<canvas id="bargraph7.5"></canvas>
+	<hr />
+	<script type="text/javascript" src="./main.js"></script>
+	<p>注意事項</p>
+	<ul>
+		<li>直近28日間の死亡率は、24日前までの28日間に感染したと仮定して、計算しています。</li>
+		<li>直近7日間の感染者数グラフの矢印は、実効再生産数を表しています。<br />
+		↓↓↓: &lt;0.75<br />
+		↓↓: 0.75-0.85<br />
+		↓: 0.85-0.95<br />
+		無し: 0.95-1.05<br />
+		↑: 1.05-1.15<br />
+		↑↑: 1.15-1.25<br />
+		↑↑↑: &gt;1.25</li>
+	</ul>
+</body>
+</html>
