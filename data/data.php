@@ -30,7 +30,7 @@ function makeJS(){
 	$csv=preg_replace('/(202[^,]+),/','$1,00,全国,',$csv);
 	$csv.=file_get_contents('http://www3.nhk.or.jp/n-data/opendata/coronavirus/nhk_news_covid19_prefectures_daily_data.csv');
 	// Check the csv file and prepare result array as $m
-	preg_match_all('/(202[^,]+),([0-9]+),([^,]+),([0-9]+,[0-9]+,[0-9]+,[0-9]+)/',$csv,$m);
+	preg_match_all('/(202[0-9\\/]+),([0-9]+),([^,]+),([0-9]+,[0-9]+,[0-9]+,[0-9]+)/',$csv,$m);
 	$num=count($m[0]);
 
 	for($i=0;$i<$num;$i++){
