@@ -88,7 +88,7 @@ draw_graphs=function(viewPercent){
 		labels.push(gdata[i]['pref']);
 		data2.push(gdata[i]['pcrpercent']);
 	}
-	draw_bargraph('bargraph3.9',labels,pcrdate+'までの直近7日間のPCR検査陽性率','陽性率（人口当たりの陽性者数順）',data2,0,'%',25);
+	draw_bargraph('bargraph3.9',labels,pcrdate+'までの直近7日間のPCR検査陽性率','陽性率（人口当たりの陽性者数順）',data2,0,'%',100);
 	// Sort array for death
 	gdata.sort(function(a,b){ return b.death-a.death; });
 	labels=new Array();
