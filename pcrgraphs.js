@@ -25,7 +25,7 @@ draw_graphs=function(viewPercent){
 			}
 		}
 	};
-	draw_graph_2('graph3',yAxes,prefdata['pname']+'の陽性率推移',{type:6,name:'陽性率７日平均'},viewPercent,graphMax ? graphMax:35);
+	draw_graph_2('graph3',yAxes,prefdata['pname']+'の陽性率推移',{type:6,name:'陽性率７日平均'},viewPercent,100);
 };
 
 draw_graph_2=function(canvas_name,yAxes,title,data1,viewPercent,ymax){
