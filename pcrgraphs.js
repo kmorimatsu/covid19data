@@ -7,6 +7,7 @@
 ********************************************/
 
 draw_graphs=function(viewPercent){
+	var i,max;
 	var yAxes={
 		ticks:{
 			min: 0,
@@ -16,7 +17,14 @@ draw_graphs=function(viewPercent){
 		}
 	};
 	draw_graph_2('graph1',yAxes,prefdata['pname']+'の一日の陽性者数推移',{type:4,name:'一日の陽性者数７日平均'},viewPercent);
-	draw_graph_2('graph2',yAxes,prefdata['pname']+'の一日のPCR検査数推移',{type:5,name:'一日のPCR検査数７日平均'},viewPercent);
+	// Determine max Y
+	max=0;
+	for(i=0;i<prefdata['data'].length;i++){
+		if (max<=prefdata['data'][i][5]) max=prefdata['data'][i][5];
+	}
+	if (300000<max) max=300000; // # of PCR test must be less than 300000
+	else max=undefined;
+	draw_graph_2('graph2',yAxes,prefdata['pname']+'の一日のPCR検査数推移',{type:5,name:'一日のPCR検査数７日平均'},viewPercent,max);
 	var yAxes={
 		ticks:{
 			min: 0,
