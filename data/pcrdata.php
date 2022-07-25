@@ -53,12 +53,12 @@ while(1){
 	// If the JS file was created more than an hour ago, break;
 	if (filemtime('./pcrdata.js')+3600<time()) break;
 	// Rediect
-	header('Location: pcrdata.js');
+	header('Location: pcrdata.js?t='.filemtime('./pcrdata.js'));
 	exit;
 }
 // Create JS file again
 @file_put_contents('./pcrdata.js',makeJS());
-header('Location: pcrdata.js');
+header('Location: pcrdata.js?t='.filemtime('./pcrdata.js'));
 exit;
 
 function makeJS(){

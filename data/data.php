@@ -13,12 +13,12 @@ while(1){
 	// If the JS file was created more than an hour ago, break;
 	if (filemtime('./data.js')+3600<time()) break;
 	// Rediect
-	header('Location: data.js');
+	header('Location: data.js?t='.filemtime('./data.js'));
 	exit;
 }
 // Create JS file again
 @file_put_contents('./data.js',makeJS());
-header('Location: data.js');
+header('Location: data.js?t='.filemtime('./data.js'));
 exit;
 
 function makeJS(){
