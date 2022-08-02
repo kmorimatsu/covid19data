@@ -22,7 +22,7 @@ draw_graphs=function(viewPercent){
 	for(i=0;i<prefdata['data'].length;i++){
 		if (max<=prefdata['data'][i][5]) max=prefdata['data'][i][5];
 	}
-	if (300000<max) max=300000; // # of PCR test must be less than 300000
+	if (300000<max) max=400000; // # of PCR test must be less than 400000
 	else max=undefined;
 	draw_graph_2('graph2',yAxes,prefdata['pname']+'の一日のPCR検査数推移',{type:5,name:'一日のPCR検査数７日平均'},viewPercent,max);
 	var yAxes={
