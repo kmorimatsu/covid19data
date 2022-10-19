@@ -16,6 +16,8 @@ draw_graphs=function(viewPercent){
 	var pcrdate=pcrdata[1]['labels'][pcrlastnum];
 	var gdata=new Array();
 	for(i=1;i<data.length;i++){
+		lastnum=data[i]['labels'].length-1;
+		pcrlastnum=pcrdata[i]['labels'].length-1;
 		gdata.push({
 			'pref':data[i]['pname'],
 			'positives':data[i]['data'][lastnum][1],

@@ -22,13 +22,62 @@ header('Location: data.js?t='.filemtime('./data.js'));
 exit;
 
 function makeJS(){
+
+	require('./openurl.php');
+
+	// Get prefecture name array
+	$prefnames=prefnames();
+	// Get data from mhlw and convert it to NHK style
+	$mhlw=openURL('https://covid19.mhlw.go.jp/public/opendata/newly_confirmed_cases_daily.csv');
+	//$mhlw=file_get_contents('./newly_confirmed_cases_daily.csv');
+	$mhlw=preg_replace("/^\xEF\xBB\xBF/",'',$mhlw); // Remove BOM
+	$mhlw2=openURL('https://covid19.mhlw.go.jp/public/opendata/deaths_cumulative_daily.csv');
+	//$mhlw2=file_get_contents('./deaths_cumulative_daily.csv');
+	$mhlw2=preg_replace("@^[\s\S]*?[\r\n]2020/5/9,.*[\r\n]+@",'',$mhlw2); // Remove BOM and 2020/5/9 data
+	$mhlw2=file_get_contents('./deaths_cumulative_daily_before220510.csv').$mhlw2; // Add data before 2020/5/9
+	// Get pref table
+	$table=preg_replace('/[\r\n][\s\S]*/','',$mhlw);
+	foreach($prefnames as $a=>$n) $table=str_replace($a,$n,$table);
+	$preftable=preg_split('/,/',preg_replace('/^Date,/','',$table));
+	// Convert mhlw string to array
+	$mhlw=preg_split('/[\r\n]+/',$mhlw);
+	$mhlw2=preg_split('/[\r\n]+/',$mhlw2);
+	// Remove header
+	array_shift($mhlw);
+	array_shift($mhlw2);
+	$num=count($mhlw)<count($mhlw2) ? count($mhlw):count($mhlw2);
+	// Create NHK style CSV
+	$csv="日付,都道府県コード,都道府県名,";
+	$csv.="各地の感染者数_1日ごとの発表数,各地の感染者数_累計,";
+	$csv.="各地の死者数_1日ごとの発表数,各地の死者数_累計,\n";
+	for($i=0;$i<count($preftable);$i++){
+		$infect=0;
+		$death=0;
+		for($j=0;$j<$num;$j++){
+			// Get prefecture data
+			$query='/^([^,]*,){'.($i+1).'}([^,]*)/';
+			if (!preg_match($query,$mhlw[$j],$m)) continue;
+			if (!preg_match($query,$mhlw2[$j],$m2)) continue;
+			// The line starts with date
+			$line=preg_replace('/,.*$/',',',$mhlw[$j]);
+			// Add prefecture informatin
+			$line.=$i<10 ? "0$i,":"$i,";
+			$line.=$preftable[$i].',';
+			// Add infection data
+			$line.=$m[2].',';
+			$infect+=$m[2];
+			$line.=$infect.',';
+			// Add death data
+			$line.=($m2[2]-$death).','.$m2[2].',';
+			$death=$m2[2];
+			// Update csv
+			$csv.="$line\n";
+		}
+	}
+
 	// Prepare arrays
 	$plist=array();
 	$data=array();
-	// Read csv files from NHK site
-	$csv=file_get_contents('http://www3.nhk.or.jp/n-data/opendata/coronavirus/nhk_news_covid19_domestic_daily_data.csv');
-	$csv=preg_replace('/(202[^,]+),/','$1,00,全国,',$csv);
-	$csv.=file_get_contents('http://www3.nhk.or.jp/n-data/opendata/coronavirus/nhk_news_covid19_prefectures_daily_data.csv');
 	// Check the csv file and prepare result array as $m
 	preg_match_all('/(202[0-9\\/]+),([0-9]+),([^,]+),([0-9]+,[0-9]+,[0-9]+,[0-9]+)/',$csv,$m);
 	$num=count($m[0]);
@@ -73,7 +122,7 @@ function makeJS(){
 
 	// Construct JavaScript
 	$js="/*\n";
-	$js.="  The data was fetched from https://www3.nhk.or.jp/news/special/coronavirus/\n";
+	$js.="  The data was fetched from https://www.mhlw.go.jp/stf/covid-19/open-data.html\n";
 	$js.="  , modified and converted to Javascript code.\n";
 	$js.="*/\n";
 	$js.="var data=new Array();\n";
@@ -90,4 +139,57 @@ function makeJS(){
 		}
 	}
 	return $js;
+}
+
+function prefnames(){
+	$prefnames=array();
+	$prefnames['ALL']='全国';
+	$prefnames['Hokkaido']='北海道';
+	$prefnames['Aomori']='青森県';
+	$prefnames['Iwate']='岩手県';
+	$prefnames['Miyagi']='宮城県';
+	$prefnames['Akita']='秋田県';
+	$prefnames['Yamagata']='山形県';
+	$prefnames['Fukushima']='福島県';
+	$prefnames['Ibaraki']='茨城県';
+	$prefnames['Tochigi']='栃木県';
+	$prefnames['Gunma']='群馬県';
+	$prefnames['Saitama']='埼玉県';
+	$prefnames['Chiba']='千葉県';
+	$prefnames['Tokyo']='東京都';
+	$prefnames['Kanagawa']='神奈川県';
+	$prefnames['Niigata']='新潟県';
+	$prefnames['Toyama']='富山県';
+	$prefnames['Ishikawa']='石川県';
+	$prefnames['Fukui']='福井県';
+	$prefnames['Yamanashi']='山梨県';
+	$prefnames['Nagano']='長野県';
+	$prefnames['Gifu']='岐阜県';
+	$prefnames['Shizuoka']='静岡県';
+	$prefnames['Aichi']='愛知県';
+	$prefnames['Mie']='三重県';
+	$prefnames['Shiga']='滋賀県';
+	$prefnames['Kyoto']='京都府';
+	$prefnames['Osaka']='大阪府';
+	$prefnames['Hyogo']='兵庫県';
+	$prefnames['Nara']='奈良県';
+	$prefnames['Wakayama']='和歌山県';
+	$prefnames['Tottori']='鳥取県';
+	$prefnames['Shimane']='島根県';
+	$prefnames['Okayama']='岡山県';
+	$prefnames['Hiroshima']='広島県';
+	$prefnames['Yamaguchi']='山口県';
+	$prefnames['Tokushima']='徳島県';
+	$prefnames['Kagawa']='香川県';
+	$prefnames['Ehime']='愛媛県';
+	$prefnames['Kochi']='高知県';
+	$prefnames['Fukuoka']='福岡県';
+	$prefnames['Saga']='佐賀県';
+	$prefnames['Nagasaki']='長崎県';
+	$prefnames['Kumamoto']='熊本県';
+	$prefnames['Oita']='大分県';
+	$prefnames['Miyazaki']='宮崎県';
+	$prefnames['Kagoshima']='鹿児島県';
+	$prefnames['Okinawa']='沖縄県';
+	return $prefnames;
 }
